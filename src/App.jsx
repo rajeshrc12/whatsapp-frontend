@@ -1,15 +1,32 @@
 import { GoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 const App = () => {
   const [user, setUser] = useState({});
+  const [socket, setSocket] = useState(null);
+  const [message, setMessage] = useState("");
+  const [reply, setReply] = useState("");
+  useEffect(() => {
+    if (socket && user?.email) {
+      socket.on(user?.email, (chats) => {
+        setReply(chats);
+      });
+    }
+  }, [socket]);
   return (
     <>
       <GoogleLogin
         onSuccess={(credentialResponse) => {
           const result = jwtDecode(credentialResponse.credential);
           console.log(result.picture);
+          const skt = io("http://localhost:3001", {
+            query: {
+              email: result.email,
+            },
+          });
+          setSocket(skt);
           setUser(result);
         }}
         onError={() => {
@@ -24,6 +41,29 @@ const App = () => {
           width: "100px",
         }}
       ></div>
+      <div>
+        <textarea
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          name=""
+          id=""
+          cols="30"
+          rows="10"
+        ></textarea>
+      </div>
+      <div>
+        <button
+          onClick={async () => {
+            await axios.post("http://localhost:3001/", {
+              message,
+              email: user.email,
+            });
+          }}
+        >
+          send
+        </button>
+      </div>
+      <div>{reply}</div>
     </>
   );
 };
