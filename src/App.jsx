@@ -54,7 +54,7 @@ const App = () => {
       <div>
         <button
           onClick={async () => {
-            await axios.post("http://localhost:3001/", {
+            await axios.post(`${import.meta.env.VITE_SERVER_URL}/`, {
               message,
               email: user.email,
             });
