@@ -21,7 +21,7 @@ const App = () => {
         onSuccess={(credentialResponse) => {
           const result = jwtDecode(credentialResponse.credential);
           console.log(result.picture);
-          const skt = io("http://localhost:3001", {
+          const skt = io(`${import.meta.env.VITE_SERVER_URL}`, {
             query: {
               email: result.email,
             },
