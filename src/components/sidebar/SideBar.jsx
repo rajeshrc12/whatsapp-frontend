@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ChatIcon from "../../icons/ChatIcon";
 import EmptyProfileIcon from "../../icons/EmptyProfileIcon";
 

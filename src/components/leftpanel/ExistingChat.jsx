@@ -5,20 +5,41 @@ import ExistingChatContact from "./ExistingChatContact";
 import { useDispatch, useSelector } from "react-redux";
 import { left } from "../../state/panel/panelSlice";
 import { useNavigate } from "react-router-dom";
-import { getContacts } from "../../service/chat";
-import { setCurrentUser } from "../../state/user/userSlice";
+import { getChats, getContacts } from "../../service/chat";
+import {
+  resetUser,
+  setCurrentUser,
+  setSelectedUser,
+} from "../../state/user/userSlice";
+import { getUser } from "../../service/user";
 const ExistingChat = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  const handleExistingChatContact = async (email) => {
+    if (user.selectedUser.email !== email) {
+      const result = await getUser({ email });
+      const chats = await getChats({
+        from: user.currentUser.email,
+        to: email,
+      });
+      dispatch(
+        setSelectedUser({
+          email,
+          lastSeen: result.lastSeen,
+          profileImageUrl: result.profileImageUrl,
+          name: result.name,
+          chats,
+        })
+      );
+    }
+  };
   useEffect(() => {
-    const localStorageUser = JSON.parse(localStorage.getItem("user"));
-    if (localStorageUser?.email)
-      getContacts(localStorageUser.email).then((res) =>
+    if (user?.currentUser?.email)
+      getContacts(user?.currentUser.email).then((res) =>
         dispatch(setCurrentUser({ ...user.currentUser, contacts: res }))
       );
   }, []);
-  console.log(user.currentUser.contacts);
   return (
     <div className="h-full">
       <div className="h-[17%] border-b-[1px] flex flex-col justify-between">
@@ -35,7 +56,7 @@ const ExistingChat = () => {
             <div>
               <MenuIcon
                 onClick={() => {
-                  localStorage.removeItem("user");
+                  dispatch(resetUser());
                   navigate("/login");
                 }}
               />
@@ -56,6 +77,7 @@ const ExistingChat = () => {
             contact={contact}
             key={contact.name}
             user={user}
+            handleExistingChatContact={handleExistingChatContact}
           />
         ))}
       </div>

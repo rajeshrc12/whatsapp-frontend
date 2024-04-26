@@ -30,11 +30,11 @@ const NewChat = () => {
     }
   };
   useEffect(() => {
-    if (user.currentUser.email)
+    if (user?.currentUser?.email)
       getAllUsers().then((res) =>
         setUsers(res.filter((u) => u.email !== user.currentUser.email))
       );
-  }, [user]);
+  }, []);
   return (
     <div className="h-full">
       <div className="h-[17%] border-b-[1px] flex flex-col justify-between">
@@ -62,7 +62,7 @@ const NewChat = () => {
           <NewChatContact
             key={user._id}
             user={user}
-            onClick={handleNewChatContact}
+            handleNewChatContact={handleNewChatContact}
           />
         ))}
       </div>

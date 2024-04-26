@@ -21,10 +21,9 @@ export const getChats = async ({ from, to }) => {
   }
 };
 
-export const getContacts = async (name) => {
+export const getContacts = async (email) => {
   try {
-    console.log(name);
-    const response = await axios.get(`${serverUrl}/contact/${name}`);
+    const response = await axios.get(`${serverUrl}/contact/${email}`);
     // console.log("src/service/chat/(getContacts)", response.data);
     return response.data;
   } catch (error) {

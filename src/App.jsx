@@ -6,36 +6,45 @@ import LeftPanel from "./components/leftpanel/LeftPanel";
 import MiddlePanel from "./components/middlepanel/MiddlePanel";
 import { useDispatch, useSelector } from "react-redux";
 import { FaLinkedin } from "react-icons/fa";
-import { setChats, setCurrentUser, updateChats } from "./state/user/userSlice";
+import { setSelectedUser, updateChats } from "./state/user/userSlice";
+import { getUser } from "./service/user";
 const App = () => {
   const user = useSelector((state) => state.user);
   const [socket, setSocket] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const handleOnlineUsers = async (onlineUsers) => {
+    if (onlineUsers.find((u) => u.email === user.selectedUser.email))
+      dispatch(setSelectedUser({ ...user.selectedUser, lastSeen: "online" }));
+    else {
+      const result = await getUser({ email: user.selectedUser.email });
+      console.log(result, user.selectedUser.email);
+      dispatch(
+        setSelectedUser({
+          ...user.selectedUser,
+          lastSeen: result.lastSeen,
+        })
+      );
+    }
+  };
   useEffect(() => {
-    if (localStorage.getItem("user")) {
-      const localStorageUser = JSON.parse(localStorage.getItem("user"));
-      if (localStorageUser.email) {
-        const skt = io(import.meta.env.VITE_SERVER_URL, {
-          query: {
-            email: localStorageUser.email,
-          },
-        });
-        setSocket(skt);
-        dispatch(setCurrentUser({ ...localStorageUser, contacts: [] }));
-      }
+    if (user?.currentUser?.email) {
+      const skt = io(import.meta.env.VITE_SERVER_URL, {
+        query: {
+          email: user?.currentUser?.email,
+        },
+      });
+      setSocket(skt);
     } else {
       navigate("/login");
     }
   }, []);
   useEffect(() => {
-    if (localStorage.getItem("user")) {
-      const localStorageUser = JSON.parse(localStorage.getItem("user"));
-      if (socket && localStorageUser?.email) {
-        socket.on(localStorageUser.email, (chats) => {
-          dispatch(updateChats(chats));
-        });
-      }
+    if (socket && user?.currentUser?.email) {
+      socket.on(user?.currentUser?.email, (chats) => {
+        dispatch(updateChats(chats));
+      });
+      socket.on("onlineUsers", handleOnlineUsers);
     }
   }, [socket]);
   return (

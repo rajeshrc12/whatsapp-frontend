@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { sendChats } from "../../service/chat";
-import { updateChats } from "../../state/user/userSlice";
+import { getContacts, sendChats } from "../../service/chat";
+import { setCurrentUser, updateChats } from "../../state/user/userSlice";
 const ChatBox = () => {
   const [message, setMessage] = useState("");
   const user = useSelector((state) => state.user);
@@ -20,6 +20,8 @@ const ChatBox = () => {
         to: user.selectedUser.email,
         chat: [chat],
       });
+      const res = await getContacts(user?.currentUser.email);
+      dispatch(setCurrentUser({ ...user.currentUser, contacts: res }));
       dispatch(
         updateChats([
           {
