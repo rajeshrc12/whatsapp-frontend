@@ -12,12 +12,12 @@ const NewChat = () => {
   const [users, setUsers] = useState([]);
   const handleNewChatContact = async (email) => {
     if (user.selectedUser.email !== email) {
+      dispatch(left(""));
       const result = await getUser({ email });
       const chats = await getChats({
         from: user.currentUser.email,
         to: email,
       });
-      console.log(chats);
       dispatch(
         setSelectedUser({
           email,

@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import PlusIcon from "../../icons/PlusIcon";
 import Chat from "./Chat";
 import ChatBox from "./ChatBox";
 import { useSelector } from "react-redux";
 const ChatWindow = () => {
   const user = useSelector((state) => state.user);
+  const bottomRef = useRef();
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [user.selectedUser.chats]);
   return (
     <div className="h-full">
       <div className="h-[90%] overflow-y-scroll px-10 py-5 flex flex-col gap-1">
@@ -15,6 +19,7 @@ const ChatWindow = () => {
             currentUserEmail={user.currentUser.email}
           />
         ))}
+        <div ref={bottomRef}></div>
       </div>
       <div className="h-[10%] flex bg-panel-header-background items-center px-2 gap-3">
         <PlusIcon />

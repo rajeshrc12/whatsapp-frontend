@@ -27,9 +27,6 @@ const Login = () => {
           <div>WHATSAPP WEB</div>
         </div>
         <div className="h-[75%] bg-white shadow-2xl rounded flex justify-center items-center flex-col">
-          envs
-          <div>{import.meta.env.VITE_GOOGLE_ID}</div>
-          <div>{import.meta.env.VITE_SERVER_URL}</div>
           <div
             style={{
               backgroundImage: `url(${qr})`,

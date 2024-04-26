@@ -4,19 +4,30 @@ const serverUrl = import.meta.env.VITE_SERVER_URL;
 export const sendChats = async (chat) => {
   try {
     const response = await axios.post(`${serverUrl}/chat`, chat);
-    // console.log("src/service/user/(addUser)", response.data);
+    // console.log("src/service/chat/(addUser)", response.data);
     return response.data.chats;
   } catch (error) {
-    console.log("error src/service/user/(addUser)", error);
+    console.log("error src/service/chat/(addUser)", error);
   }
 };
 
 export const getChats = async ({ from, to }) => {
   try {
     const response = await axios.get(`${serverUrl}/chat/${from}/${to}`);
-    // console.log("src/service/user/(getChats)", response.data);
+    // console.log("src/service/chat/(getChats)", response.data);
     return response.data;
   } catch (error) {
-    console.log("error src/service/user/(getChats)", error);
+    console.log("error src/service/chat/(getChats)", error);
+  }
+};
+
+export const getContacts = async (name) => {
+  try {
+    console.log(name);
+    const response = await axios.get(`${serverUrl}/contact/${name}`);
+    // console.log("src/service/chat/(getContacts)", response.data);
+    return response.data;
+  } catch (error) {
+    console.log("error src/service/chat/(getContacts)", error);
   }
 };

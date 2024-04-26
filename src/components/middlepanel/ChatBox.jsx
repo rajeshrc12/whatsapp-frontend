@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { sendChats } from "../../service/chat";
-import { setChats } from "../../state/user/userSlice";
+import { updateChats } from "../../state/user/userSlice";
 const ChatBox = () => {
   const [message, setMessage] = useState("");
   const user = useSelector((state) => state.user);
@@ -9,19 +9,26 @@ const ChatBox = () => {
   const handleMessage = async (e) => {
     if (e.key === "Enter" && message.trim()) {
       setMessage("");
-      const chats = await sendChats({
+      const chat = {
         from: user.currentUser.email,
         to: user.selectedUser.email,
-        chat: [
-          {
-            from: user.currentUser.email,
-            to: user.selectedUser.email,
-            type: "text",
-            message,
-          },
-        ],
+        type: "text",
+        message,
+      };
+      await sendChats({
+        from: user.currentUser.email,
+        to: user.selectedUser.email,
+        chat: [chat],
       });
-      dispatch(setChats(chats));
+      dispatch(
+        updateChats([
+          {
+            ...chat,
+            createdAt: String(new Date()),
+            _id: new Date().getTime(),
+          },
+        ])
+      );
     }
   };
   return (

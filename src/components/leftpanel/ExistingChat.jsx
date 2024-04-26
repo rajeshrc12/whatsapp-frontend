@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import NewChatIcon from "../../icons/NewChatIcon";
 import MenuIcon from "../../icons/MenuIcon";
 import ExistingChatContact from "./ExistingChatContact";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { left } from "../../state/panel/panelSlice";
 import { useNavigate } from "react-router-dom";
+import { getContacts } from "../../service/chat";
+import { setCurrentUser } from "../../state/user/userSlice";
 const ExistingChat = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  useEffect(() => {
+    const localStorageUser = JSON.parse(localStorage.getItem("user"));
+    if (localStorageUser?.email)
+      getContacts(localStorageUser.email).then((res) =>
+        dispatch(setCurrentUser({ ...user.currentUser, contacts: res }))
+      );
+  }, []);
+  console.log(user.currentUser.contacts);
   return (
     <div className="h-full">
       <div className="h-[17%] border-b-[1px] flex flex-col justify-between">
@@ -40,7 +51,13 @@ const ExistingChat = () => {
         </div>
       </div>
       <div className="h-[83%] overflow-y-scroll">
-        <ExistingChatContact />
+        {user.currentUser.contacts.map((contact) => (
+          <ExistingChatContact
+            contact={contact}
+            key={contact.name}
+            user={user}
+          />
+        ))}
       </div>
     </div>
   );
