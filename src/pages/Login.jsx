@@ -5,15 +5,14 @@ import WhatsappIcon from "../icons/WhatsappIcon";
 import qr from "../images/qr.png";
 import { useNavigate } from "react-router-dom";
 import { addUser } from "../service/user";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setCurrentUser } from "../state/user/userSlice";
+const localStorageUser = JSON.parse(localStorage.getItem("user"));
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
-  console.log(user);
   useEffect(() => {
-    if (user?.currentUser?.email) {
+    if (localStorageUser?.email) {
       navigate("/");
     }
   }, []);
@@ -46,6 +45,7 @@ const Login = () => {
                   name: result.name,
                   profileImageUrl: result.picture,
                 };
+                localStorage.setItem("user", JSON.stringify(user));
                 addUser(user);
                 dispatch(setCurrentUser({ ...user, contacts: [] }));
                 navigate("/");

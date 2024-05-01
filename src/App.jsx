@@ -1,88 +1,72 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
-import SideBar from "./components/sidebar/SideBar";
-import LeftPanel from "./components/leftpanel/LeftPanel";
-import MiddlePanel from "./components/middlepanel/MiddlePanel";
+import { useNavigate } from "react-router-dom";
+import { getAllUsers, getUser } from "./service/user";
 import { useDispatch, useSelector } from "react-redux";
-import { FaLinkedin } from "react-icons/fa";
-import { setSelectedUser, updateChats } from "./state/user/userSlice";
-import { getUser } from "./service/user";
+import { setSelectedUser, updateLastSeen } from "./state/user/userSlice";
+import { getTimeInAmPM } from "./utils/common";
 const App = () => {
-  const user = useSelector((state) => state.user);
-  const [socket, setSocket] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const handleOnlineUsers = async (onlineUsers) => {
-    if (onlineUsers.find((u) => u.email === user.selectedUser.email))
-      dispatch(setSelectedUser({ ...user.selectedUser, lastSeen: "online" }));
-    else {
-      const result = await getUser({ email: user.selectedUser.email });
-      console.log(result, user.selectedUser.email);
-      dispatch(
-        setSelectedUser({
-          ...user.selectedUser,
-          lastSeen: result.lastSeen,
-        })
-      );
-    }
-  };
+  const [socket, setSocket] = useState(null);
+  const [users, setUsers] = useState([]);
+  const user = useSelector((state) => state.user);
   useEffect(() => {
-    if (user?.currentUser?.email) {
+    const localStorageUser = JSON.parse(localStorage.getItem("user"));
+    if (localStorageUser?.email) {
       const skt = io(import.meta.env.VITE_SERVER_URL, {
         query: {
-          email: user?.currentUser?.email,
+          email: localStorageUser.email,
         },
       });
       setSocket(skt);
-    } else {
-      navigate("/login");
-    }
+      getAllUsers().then((res) =>
+        setUsers(res.filter((u) => u.email !== localStorageUser.email))
+      );
+    } else navigate("/login");
   }, []);
   useEffect(() => {
-    if (socket && user?.currentUser?.email) {
-      socket.on(user?.currentUser?.email, (chats) => {
-        dispatch(updateChats(chats));
+    if (socket) {
+      socket.on("onlineUsers", () => {
+        dispatch(updateLastSeen());
       });
-      socket.on("onlineUsers", handleOnlineUsers);
     }
   }, [socket]);
   return (
-    <div className="flex h-screen w-screen">
-      <div className="w-[4%]">
-        <SideBar user={user} />
-      </div>
-      <div className="w-[31%] border">
-        <LeftPanel />
-      </div>
-      <div className="w-[65%] border">
-        {user.selectedUser.name ? (
-          <MiddlePanel />
-        ) : (
-          <div className="bg-panel-header-background h-full flex justify-center items-center">
-            <div className="text-center">
-              <div className="text-2xl">WhatsApp web</div>
-              <img
-                src="https://static.whatsapp.net/rsrc.php/v3/yX/r/dJq9qKG5lDb.png"
-                width="320"
-                alt=""
-              ></img>
-              <div className="flex justify-center gap-1">
-                <div>By</div>
-                <a
-                  className="font-bold flex items-center gap-1"
-                  target="_blank"
-                  href="https://www.linkedin.com/in/rajeshcharhajari/"
-                >
-                  <div>Rajesh charhajari</div>
-                  <div>
-                    <FaLinkedin />
-                  </div>
-                </a>
-              </div>
+    <div className="h-screen w-screen flex">
+      <div className="w-[30%]">
+        <div className="h-[10%] flex justify-between border"></div>
+        <div className="h-[90%] overflow-y-scroll border">
+          {users.map((u) => (
+            <div
+              key={u.name}
+              className="border p-2"
+              onClick={async () => {
+                if (user.selectedUser.email !== u.email) {
+                  const result = await getUser({ email: u.email });
+                  dispatch(
+                    setSelectedUser({
+                      email: u.email,
+                      lastSeen: result.lastSeen,
+                      profileImageUrl: result.profileImageUrl,
+                      name: result.name,
+                      chats: [],
+                    })
+                  );
+                }
+              }}
+            >
+              {u.name}
             </div>
-          </div>
-        )}
+          ))}
+        </div>
+      </div>
+      <div className="w-[70%]">
+        <div className="h-[10%] justify-between border">
+          <div>{user.selectedUser.name}</div>
+          <div>{getTimeInAmPM(user.selectedUser.lastSeen)}</div>
+        </div>
+        <div className="h-[90%] overflow-y-scroll border"></div>
       </div>
     </div>
   );
