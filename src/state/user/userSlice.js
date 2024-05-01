@@ -27,6 +27,12 @@ const userSlice = createSlice({
     setSelectedUser: (state, action) => {
       state.selectedUser = action.payload;
     },
+    updateChats: (state, action) => {
+      state.selectedUser.chats = [
+        ...state.selectedUser.chats,
+        ...action.payload,
+      ];
+    },
     resetUser: () => initialState,
   },
   extraReducers: (builder) => {
@@ -52,5 +58,6 @@ export const updateLastSeen = createAsyncThunk(
     }
   }
 );
-export const { setCurrentUser, setSelectedUser, resetUser } = userSlice.actions;
+export const { setCurrentUser, setSelectedUser, resetUser, updateChats } =
+  userSlice.actions;
 export default userSlice.reducer;

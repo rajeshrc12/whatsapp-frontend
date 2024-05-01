@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentUser, updateLastSeen } from "./state/user/userSlice";
+import {
+  setCurrentUser,
+  updateChats,
+  updateLastSeen,
+} from "./state/user/userSlice";
 import { FaLinkedin } from "react-icons/fa";
 import SideBar from "./components/sidebar/SideBar";
 import LeftPanel from "./components/leftpanel/LeftPanel";
@@ -26,6 +30,10 @@ const App = () => {
   }, []);
   useEffect(() => {
     if (socket) {
+      const localStorageUser = JSON.parse(localStorage.getItem("user"));
+      socket.on(localStorageUser?.email, (chats) => {
+        dispatch(updateChats(chats));
+      });
       socket.on("onlineUsers", () => {
         dispatch(updateLastSeen());
       });
