@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getUser } from "../../service/user";
+import { getChats } from "../../service/chat";
 
 const initialState = {
   currentUser: {
@@ -39,6 +40,9 @@ const userSlice = createSlice({
     builder.addCase(updateLastSeen.fulfilled, (state, action) => {
       state.selectedUser.lastSeen = action.payload;
     });
+    builder.addCase(fetchChats.fulfilled, (state, action) => {
+      state.selectedUser.chats = action.payload;
+    });
   },
 });
 export const updateLastSeen = createAsyncThunk(
@@ -53,6 +57,27 @@ export const updateLastSeen = createAsyncThunk(
         lastSeen = result.lastSeen;
       }
       return lastSeen;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+export const fetchChats = createAsyncThunk(
+  "fetchChats",
+  async (currentUserEmail, thunkAPI) => {
+    try {
+      const state = thunkAPI.getState();
+      let chats = state.user.selectedUser.chats;
+      console.log("from slice fetchChats", state.user, currentUserEmail);
+      if (currentUserEmail && state.user.selectedUser.email) {
+        const result = await getChats({
+          from: currentUserEmail,
+          to: state.user.selectedUser.email,
+        });
+        console.log(result);
+        chats = result;
+      }
+      return chats;
     } catch (error) {
       console.log(error);
     }

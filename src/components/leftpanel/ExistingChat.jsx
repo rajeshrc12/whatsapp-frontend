@@ -1,33 +1,52 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentUser, setSelectedUser } from "../../state/user/userSlice";
-import { getChats, getContacts } from "../../service/chat";
+import {
+  resetUser,
+  setCurrentUser,
+  setSelectedUser,
+} from "../../state/user/userSlice";
+import { getChats, getContacts, readChats } from "../../service/chat";
 import { left } from "../../state/panel/panelSlice";
 import { useNavigate } from "react-router-dom";
 import NewChatIcon from "../../icons/NewChatIcon";
 import MenuIcon from "../../icons/MenuIcon";
 import ExistingChatContact from "./ExistingChatContact";
-import { getUser } from "../../service/user";
-const localStorageUser = JSON.parse(localStorage.getItem("user"));
+import { getUser, setOpenProfile } from "../../service/user";
+const localStorageUser = JSON.parse(localStorage.getItem("user")) || {};
 const ExistingChat = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const handleExistingChatContact = async (contact) => {
-    const result = await getUser({ email: contact.email });
-    const chats = await getChats({
-      from: localStorageUser.email,
-      to: contact.email,
-    });
-    dispatch(
-      setSelectedUser({
-        email: contact.email,
-        lastSeen: result.lastSeen,
-        profileImageUrl: result.profileImageUrl,
-        name: result.name,
-        chats,
-      })
-    );
+    console.log(contact);
+    if (user.selectedUser.email !== contact.email) {
+      if (contact.unseenCount) {
+        await readChats({
+          from: localStorageUser.email,
+          to: contact.email,
+        });
+        const result = await getContacts(localStorageUser.email);
+        dispatch(setCurrentUser({ ...user.currentUser, contacts: result }));
+      }
+      const result = await getUser({ email: contact.email });
+      const chats = await getChats({
+        from: localStorageUser.email,
+        to: contact.email,
+      });
+      dispatch(
+        setSelectedUser({
+          email: contact.email,
+          lastSeen: result.lastSeen,
+          profileImageUrl: result.profileImageUrl,
+          name: result.name,
+          chats,
+        })
+      );
+      await setOpenProfile({
+        email: localStorageUser.email,
+        openProfile: contact.email,
+      });
+    }
   };
   useEffect(() => {
     if (localStorageUser?.email)

@@ -3,6 +3,7 @@ import { io } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  fetchChats,
   setCurrentUser,
   updateChats,
   updateLastSeen,
@@ -11,6 +12,7 @@ import { FaLinkedin } from "react-icons/fa";
 import SideBar from "./components/sidebar/SideBar";
 import LeftPanel from "./components/leftpanel/LeftPanel";
 import MiddlePanel from "./components/middlepanel/MiddlePanel";
+import { getContacts } from "./service/chat";
 const App = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -31,8 +33,22 @@ const App = () => {
   useEffect(() => {
     if (socket) {
       const localStorageUser = JSON.parse(localStorage.getItem("user"));
-      socket.on(localStorageUser?.email, (chats) => {
-        dispatch(updateChats(chats));
+      socket.on(localStorageUser?.email, (data) => {
+        console.log(data);
+        if (data.type === "updateChats") {
+          dispatch(updateChats(data.chat));
+        }
+        if (
+          data.type === "fetchContacts" ||
+          data.type === "fetchContactsAndChats"
+        ) {
+          getContacts(localStorageUser.email).then((res) =>
+            dispatch(setCurrentUser({ ...user.currentUser, contacts: res }))
+          );
+        }
+        if (data.type === "fetchContactsAndChats") {
+          dispatch(fetchChats(localStorageUser?.email));
+        }
       });
       socket.on("onlineUsers", () => {
         dispatch(updateLastSeen());

@@ -33,3 +33,16 @@ export const getUser = async ({ email }) => {
     console.log("error src/service/user/(getUser)", error);
   }
 };
+
+export const setOpenProfile = async ({ email, openProfile }) => {
+  try {
+    const response = await axios.post(`${serverUrl}/openprofile`, {
+      email,
+      openProfile,
+    });
+    // console.log("src/service/user/(setOpenProfile)", response.data);
+    return response.data;
+  } catch (error) {
+    console.log("error src/service/user/(setOpenProfile)", error);
+  }
+};

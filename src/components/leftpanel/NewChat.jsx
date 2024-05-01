@@ -1,30 +1,38 @@
 import React, { useEffect, useState } from "react";
 import BackIcon from "../../icons/BackIcon";
 import NewChatContact from "./NewChatContact";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { left } from "../../state/panel/panelSlice";
-import { getAllUsers, getUser } from "../../service/user";
+import { getAllUsers, getUser, setOpenProfile } from "../../service/user";
 import { setSelectedUser } from "../../state/user/userSlice";
 import { getChats } from "../../service/chat";
-const localStorageUser = JSON.parse(localStorage.getItem("user"));
+const localStorageUser = JSON.parse(localStorage.getItem("user")) || {};
 const NewChat = () => {
   const dispatch = useDispatch();
   const [users, setUsers] = useState([]);
-  const handleNewChatContact = async (user) => {
-    const result = await getUser({ email: user.email });
-    const chats = await getChats({
-      from: localStorageUser.email,
-      to: user.email,
-    });
-    dispatch(
-      setSelectedUser({
-        email: user.email,
-        lastSeen: result.lastSeen,
-        profileImageUrl: result.profileImageUrl,
-        name: result.name,
-        chats,
-      })
-    );
+  const user = useSelector((state) => state.user);
+  const handleNewChatContact = async (newChatUser) => {
+    if (user.selectedUser.email !== newChatUser.email) {
+      dispatch(left(""));
+      const result = await getUser({ email: newChatUser.email });
+      const chats = await getChats({
+        from: localStorageUser.email,
+        to: newChatUser.email,
+      });
+      dispatch(
+        setSelectedUser({
+          email: newChatUser.email,
+          lastSeen: result.lastSeen,
+          profileImageUrl: result.profileImageUrl,
+          name: result.name,
+          chats,
+        })
+      );
+      await setOpenProfile({
+        email: localStorageUser.email,
+        openProfile: newChatUser.email,
+      });
+    }
   };
   useEffect(() => {
     if (localStorageUser.email)

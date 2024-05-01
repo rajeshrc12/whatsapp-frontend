@@ -4,6 +4,6 @@ export const getTimeInAmPM = (date) => {
   else if (date.toLowerCase() === "online") return date;
   else
     return moment
-      .tz(date, Intl.DateTimeFormat().resolvedOptions().timeZone)
+      .tz(new Date(date), Intl.DateTimeFormat().resolvedOptions().timeZone)
       .format("hh:mm a");
 };

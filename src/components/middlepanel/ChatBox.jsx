@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { sendChats } from "../../service/chat";
-import { updateChats } from "../../state/user/userSlice";
+import { getContacts, sendChats } from "../../service/chat";
+import { setCurrentUser, updateChats } from "../../state/user/userSlice";
+import { getUser } from "../../service/user";
 const localStorageUser = JSON.parse(localStorage.getItem("user"));
 const ChatBox = () => {
   const [message, setMessage] = useState("");
@@ -10,11 +11,14 @@ const ChatBox = () => {
   const handleMessage = async (e) => {
     if (e.key === "Enter" && message.trim()) {
       setMessage("");
+      const result = await getUser({ email: user.selectedUser.email });
+      console.log(result);
       const chat = {
         from: localStorageUser.email,
         to: user.selectedUser.email,
         type: "text",
         message,
+        seen: result.openProfile === localStorageUser.email ? true : false,
       };
       await sendChats({
         from: localStorageUser.email,
@@ -29,6 +33,10 @@ const ChatBox = () => {
             _id: new Date().getTime(),
           },
         ])
+      );
+      const resultContacts = await getContacts(localStorageUser.email);
+      dispatch(
+        setCurrentUser({ ...user.currentUser, contacts: resultContacts })
       );
     }
   };
