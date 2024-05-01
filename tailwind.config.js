@@ -25,6 +25,7 @@ export default {
         "switch-button-color": "var(--switch-button-color)",
         transparent: "rgba(0, 0, 0, 0.05)",
         transparentLg: "rgba(0, 0, 0, 0.1)",
+        transparentXl: "rgba(0, 0, 0, 0.7)",
       },
     },
   },

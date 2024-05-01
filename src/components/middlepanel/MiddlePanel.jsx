@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ChatWindow from "./ChatWindow";
 import FilePreview from "./FilePreview";
 import EmptyProfileIcon from "../../icons/EmptyProfileIcon";
@@ -8,6 +8,7 @@ import { getTimeInAmPM } from "../../utils/common";
 const MiddlePanel = () => {
   const panel = useSelector((state) => state.panel);
   const user = useSelector((state) => state.user);
+  const [files, setFiles] = useState([]);
   return (
     <div className="h-full" style={{ backgroundImage: `url(${WhatsaAppBG})` }}>
       <div className="h-[10%] bg-panel-header-background">
@@ -34,7 +35,11 @@ const MiddlePanel = () => {
         </div>
       </div>
       <div className="h-[90%]">
-        {panel.middle ? <FilePreview /> : <ChatWindow />}
+        {panel.middle ? (
+          <FilePreview files={files} setFiles={setFiles} />
+        ) : (
+          <ChatWindow setFiles={setFiles} />
+        )}
       </div>
     </div>
   );
