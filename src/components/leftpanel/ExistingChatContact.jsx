@@ -2,9 +2,15 @@ import React from "react";
 import EmptyProfileIcon from "../../icons/EmptyProfileIcon";
 import CameraIconUpload from "../../icons/CameraIconUpload";
 import VideoIcon from "../../icons/VideoIcon";
+import TickIcon from "../../icons/TickIcon";
 import DocumentIcon from "../../icons/DocumentIcon";
 import { getTimeInAmPM } from "../../utils/common";
-const ExistingChatContact = ({ contact, user, handleExistingChatContact }) => {
+const ExistingChatContact = ({
+  contact,
+  selectedEmail,
+  currentEmail,
+  handleExistingChatContact,
+}) => {
   const renderLastChat = (chat) => {
     switch (chat.type) {
       case "image":
@@ -48,13 +54,12 @@ const ExistingChatContact = ({ contact, user, handleExistingChatContact }) => {
   };
   return (
     <div
-      key={contact.name}
       className={`px-3 gap-2 cursor-pointer flex items-center ${
-        contact.name === user.selectedUser.name
+        contact.email === selectedEmail
           ? "bg-panel-header-background"
           : "hover:bg-gray-50"
       }`}
-      onClick={() => handleExistingChatContact(contact.email)}
+      onClick={() => handleExistingChatContact(contact)}
     >
       <div>
         {contact.profileImageUrl ? (
@@ -76,7 +81,7 @@ const ExistingChatContact = ({ contact, user, handleExistingChatContact }) => {
         </div>
         <div className="flex justify-between">
           <div className="text-xs text-input-border flex items-center gap-1">
-            {contact.lastChat.from === user.currentUser.name && (
+            {contact.lastChat.from === currentEmail && (
               <TickIcon seen={contact.lastChat.seen} />
             )}
             {renderLastChat(contact.lastChat)}

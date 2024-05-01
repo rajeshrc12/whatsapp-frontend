@@ -5,7 +5,7 @@ const NewChatContact = ({ user, handleNewChatContact }) => {
   return (
     <div
       className="flex gap-3 items-center p-3 cursor-pointer"
-      onClick={() => handleNewChatContact(user.email)}
+      onClick={() => handleNewChatContact(user)}
     >
       {user.profileImageUrl ? (
         <div className="avatar">

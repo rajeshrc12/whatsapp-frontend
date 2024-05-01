@@ -3,6 +3,7 @@ import PlusIcon from "../../icons/PlusIcon";
 import Chat from "./Chat";
 import ChatBox from "./ChatBox";
 import { useSelector } from "react-redux";
+const localStorageUser = JSON.parse(localStorage.getItem("user"));
 const ChatWindow = () => {
   const user = useSelector((state) => state.user);
   const bottomRef = useRef();
@@ -16,7 +17,7 @@ const ChatWindow = () => {
           <Chat
             chat={chat}
             key={chat._id}
-            currentUserEmail={user.currentUser.email}
+            currentUserEmail={localStorageUser.email}
           />
         ))}
         <div ref={bottomRef}></div>

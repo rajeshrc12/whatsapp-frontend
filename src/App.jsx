@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
-import { getAllUsers, getUser } from "./service/user";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedUser, updateLastSeen } from "./state/user/userSlice";
-import { getTimeInAmPM } from "./utils/common";
+import { setCurrentUser, updateLastSeen } from "./state/user/userSlice";
+import { FaLinkedin } from "react-icons/fa";
+import SideBar from "./components/sidebar/SideBar";
+import LeftPanel from "./components/leftpanel/LeftPanel";
+import MiddlePanel from "./components/middlepanel/MiddlePanel";
 const App = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [socket, setSocket] = useState(null);
-  const [users, setUsers] = useState([]);
   const user = useSelector((state) => state.user);
   useEffect(() => {
     const localStorageUser = JSON.parse(localStorage.getItem("user"));
@@ -20,9 +21,7 @@ const App = () => {
         },
       });
       setSocket(skt);
-      getAllUsers().then((res) =>
-        setUsers(res.filter((u) => u.email !== localStorageUser.email))
-      );
+      dispatch(setCurrentUser({ ...user.currentUser, ...localStorageUser }));
     } else navigate("/login");
   }, []);
   useEffect(() => {
@@ -33,40 +32,41 @@ const App = () => {
     }
   }, [socket]);
   return (
-    <div className="h-screen w-screen flex">
-      <div className="w-[30%]">
-        <div className="h-[10%] flex justify-between border"></div>
-        <div className="h-[90%] overflow-y-scroll border">
-          {users.map((u) => (
-            <div
-              key={u.name}
-              className="border p-2"
-              onClick={async () => {
-                if (user.selectedUser.email !== u.email) {
-                  const result = await getUser({ email: u.email });
-                  dispatch(
-                    setSelectedUser({
-                      email: u.email,
-                      lastSeen: result.lastSeen,
-                      profileImageUrl: result.profileImageUrl,
-                      name: result.name,
-                      chats: [],
-                    })
-                  );
-                }
-              }}
-            >
-              {u.name}
-            </div>
-          ))}
-        </div>
+    <div className="flex h-screen w-screen">
+      <div className="w-[4%]">
+        <SideBar />
       </div>
-      <div className="w-[70%]">
-        <div className="h-[10%] justify-between border">
-          <div>{user.selectedUser.name}</div>
-          <div>{getTimeInAmPM(user.selectedUser.lastSeen)}</div>
-        </div>
-        <div className="h-[90%] overflow-y-scroll border"></div>
+      <div className="w-[31%] border">
+        <LeftPanel />
+      </div>
+      <div className="w-[65%] border">
+        {user.selectedUser.email ? (
+          <MiddlePanel />
+        ) : (
+          <div className="bg-panel-header-background h-full flex justify-center items-center">
+            <div className="text-center">
+              <div className="text-2xl">WhatsApp web</div>
+              <img
+                src="https://static.whatsapp.net/rsrc.php/v3/yX/r/dJq9qKG5lDb.png"
+                width="320"
+                alt=""
+              ></img>
+              <div className="flex justify-center gap-1">
+                <div>By</div>
+                <a
+                  className="font-bold flex items-center gap-1"
+                  target="_blank"
+                  href="https://www.linkedin.com/in/rajeshcharhajari/"
+                >
+                  <div>Rajesh charhajari</div>
+                  <div>
+                    <FaLinkedin />
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

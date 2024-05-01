@@ -1,40 +1,38 @@
 import React, { useEffect, useState } from "react";
 import BackIcon from "../../icons/BackIcon";
 import NewChatContact from "./NewChatContact";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { left } from "../../state/panel/panelSlice";
 import { getAllUsers, getUser } from "../../service/user";
 import { setSelectedUser } from "../../state/user/userSlice";
 import { getChats } from "../../service/chat";
+const localStorageUser = JSON.parse(localStorage.getItem("user"));
 const NewChat = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
   const [users, setUsers] = useState([]);
-  const handleNewChatContact = async (email) => {
-    if (user.selectedUser.email !== email) {
-      dispatch(left(""));
-      const result = await getUser({ email });
-      const chats = await getChats({
-        from: user.currentUser.email,
-        to: email,
-      });
-      dispatch(
-        setSelectedUser({
-          email,
-          lastSeen: result.lastSeen,
-          profileImageUrl: result.profileImageUrl,
-          name: result.name,
-          chats,
-        })
-      );
-    }
+  const handleNewChatContact = async (user) => {
+    const result = await getUser({ email: user.email });
+    const chats = await getChats({
+      from: localStorageUser.email,
+      to: user.email,
+    });
+    dispatch(
+      setSelectedUser({
+        email: user.email,
+        lastSeen: result.lastSeen,
+        profileImageUrl: result.profileImageUrl,
+        name: result.name,
+        chats,
+      })
+    );
   };
   useEffect(() => {
-    if (user?.currentUser?.email)
+    if (localStorageUser.email)
       getAllUsers().then((res) =>
-        setUsers(res.filter((u) => u.email !== user.currentUser.email))
+        setUsers(res.filter((u) => u.email !== localStorageUser.email))
       );
   }, []);
+
   return (
     <div className="h-full">
       <div className="h-[17%] border-b-[1px] flex flex-col justify-between">

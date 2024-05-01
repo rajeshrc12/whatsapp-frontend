@@ -13,7 +13,7 @@ const MiddlePanel = () => {
       <div className="h-[10%] bg-panel-header-background">
         <div className="flex gap-3 items-center h-full p-3">
           <div>
-            {user.currentUser.profileImageUrl ? (
+            {user.selectedUser.profileImageUrl ? (
               <div className="avatar">
                 <div className="w-8 rounded-full">
                   <img src={user.selectedUser.profileImageUrl} />
