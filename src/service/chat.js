@@ -43,3 +43,28 @@ export const readChats = async ({ from, to }) => {
     console.log("error src/service/chat/(readChats)", error);
   }
 };
+
+export const uploadFiles = async ({ files, from, to }) => {
+  try {
+    const formData = new FormData();
+    for (const file of files) {
+      formData.append("files", file);
+    }
+    formData.append(
+      "userData",
+      JSON.stringify({
+        from,
+        to,
+      })
+    );
+    const response = await axios.post(`${serverUrl}/files`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    // console.log("src/service/chat/(uploadFiles)", response.data);
+    return response.data;
+  } catch (error) {
+    console.log("error src/service/chat/(uploadFiles)", error);
+  }
+};

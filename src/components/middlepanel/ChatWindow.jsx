@@ -10,9 +10,8 @@ const ChatWindow = ({ setFiles }) => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const bottomRef = useRef();
-  const [toast, setToast] = useState(false);
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => bottomRef.current.scrollIntoView(true));
   }, [user.selectedUser.chats]);
   return (
     <div className="h-full">
@@ -30,20 +29,17 @@ const ChatWindow = ({ setFiles }) => {
         <InputFileIcon
           icon={<PlusIcon />}
           callback={(e) => {
-            let allFiles = [...e.target.files];
-            if (
-              allFiles.find(
-                (f, i) => Math.round(f.size / 1024 / 1024) > 3 || i > 10
-              )
-            ) {
-              allFiles = allFiles.filter(
-                (f, i) => Math.round(f.size / 1024 / 1024) <= 3 && i < 10
-              );
+            let allFiles = [];
+            let fileCount = 0;
+            for (const file of [...e.target.files]) {
+              if (fileCount > 11) break;
+              if (Math.round(file.size / 1024 / 1024) <= 3) {
+                allFiles.push(file);
+                fileCount++;
+              }
             }
-            if (allFiles.length) {
-              dispatch(middle("filepreview"));
-              setFiles(allFiles);
-            }
+            setFiles(allFiles);
+            dispatch(middle("filePreview"));
           }}
         />
         <ChatBox />

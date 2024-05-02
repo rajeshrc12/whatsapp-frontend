@@ -1,15 +1,13 @@
 import React from "react";
 import { getTimeInAmPM } from "../../utils/common";
 import TickIcon from "../../icons/TickIcon";
+import DownloadIcon from "../../icons/DownloadIcon";
+import { FaFile } from "react-icons/fa";
 
 const Chat = ({ chat, currentUserEmail }) => {
-  if (chat.type === "text")
-    return (
-      <div
-        className={`flex ${
-          chat.from === currentUserEmail ? "justify-end" : "justify-start"
-        }`}
-      >
+  const renderChat = (chat) => {
+    if (chat.type === "text") {
+      return (
         <div
           className={`flex break-all relative max-w-[35rem] rounded-lg shadow gap-2 p-1 ${
             currentUserEmail === chat.from
@@ -33,16 +31,118 @@ const Chat = ({ chat, currentUserEmail }) => {
             )}
           </div>
         </div>
-      </div>
-    );
-  if (chat.type === "date")
-    return (
-      <div className="flex justify-center sticky top-0">
-        <div className="bg-white text-sm px-2 py-1 rounded-lg shadow">
-          {chat.date}
+      );
+    } else if (chat.type === "date")
+      return (
+        <div className="flex justify-center sticky top-0">
+          <div className="bg-white text-sm px-2 py-1 rounded-lg shadow">
+            {chat.date}
+          </div>
         </div>
-      </div>
-    );
+      );
+    else if (chat.type === "image")
+      return (
+        <div
+          onClick={() => {}}
+          className={`cursor-pointer p-1 w-[20rem] rounded-lg shadow ${
+            chat.from === currentUserEmail
+              ? "bg-outgoing-background"
+              : "bg-white"
+          }`}
+        >
+          <img src={chat.message} alt="" className="max-h-[20rem] w-full" />
+          <div className={`flex justify-end items-center w-full pt-1`}>
+            <div className="text-[11px] text-input-border min-w-[50px]">
+              {getTimeInAmPM(chat.createdAt)}
+            </div>
+            {chat.from === currentUserEmail && (
+              <div>
+                <TickIcon seen={chat.seen} />
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    else if (chat.type === "video")
+      return (
+        <div
+          onClick={() => {}}
+          className={`cursor-pointer p-1 w-[10rem] rounded-lg shadow ${
+            chat.from === currentUserEmail
+              ? "bg-outgoing-background"
+              : "bg-white"
+          }`}
+        >
+          <video src={chat.message} alt="" />
+          <div className={`flex justify-end items-center w-full pt-1`}>
+            <div className="text-[11px] text-input-border min-w-[50px]">
+              {getTimeInAmPM(chat.createdAt)}
+            </div>
+            {chat.from === currentUserEmail && (
+              <div>
+                <TickIcon seen={chat.seen} />
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    else
+      return (
+        <div
+          className={`p-1 w-[20rem] rounded-lg shadow ${
+            chat.from === currentUserEmail
+              ? "bg-outgoing-background"
+              : "bg-white"
+          }`}
+        >
+          <div className="flex justify-between p-3 bg-transparent rounded-lg">
+            <div className="flex gap-2">
+              <div>
+                <FaFile color="#79909b" size={30} />
+              </div>
+              <div>
+                <div className="text-xs">{chat.filename}</div>
+                <div></div>
+              </div>
+            </div>
+            <div>
+              <DownloadIcon
+                onClick={() => {
+                  const link = document.createElement("a");
+                  link.href = chat.message;
+                  link.setAttribute("download", chat.filename);
+                  // Append to html link element page
+                  document.body.appendChild(link);
+                  // Start download
+                  link.click();
+                  // Clean up and remove the link
+                  link.parentNode.removeChild(link);
+                }}
+              />
+            </div>
+          </div>
+          <div className={`flex justify-end items-center w-full pt-1`}>
+            <div className="text-[11px] text-input-border min-w-[50px]">
+              {getTimeInAmPM(chat.createdAt)}
+            </div>
+            {chat.from === currentUserEmail && (
+              <div>
+                <TickIcon seen={chat.seen} />
+              </div>
+            )}
+          </div>
+        </div>
+      );
+  };
+  return (
+    <div
+      className={`flex ${
+        chat.from === currentUserEmail ? "justify-end" : "justify-start"
+      }`}
+    >
+      {renderChat(chat)}
+    </div>
+  );
 };
 
 export default Chat;
