@@ -32,15 +32,7 @@ const Chat = ({ chat, currentUserEmail }) => {
           </div>
         </div>
       );
-    } else if (chat.type === "date")
-      return (
-        <div className="flex justify-center sticky top-0">
-          <div className="bg-white text-sm px-2 py-1 rounded-lg shadow">
-            {chat.date}
-          </div>
-        </div>
-      );
-    else if (chat.type === "image")
+    } else if (chat.type === "image")
       return (
         <div
           onClick={() => {}}
@@ -50,6 +42,7 @@ const Chat = ({ chat, currentUserEmail }) => {
               : "bg-white"
           }`}
         >
+          {console.log("Chat", chat)}
           <img src={chat.message} alt="" className="max-h-[20rem] w-full" />
           <div className={`flex justify-end items-center w-full pt-1`}>
             <div className="text-[11px] text-input-border min-w-[50px]">
@@ -134,7 +127,13 @@ const Chat = ({ chat, currentUserEmail }) => {
         </div>
       );
   };
-  return (
+  return chat.type === "date" ? (
+    <div className="flex justify-center sticky top-0">
+      <div className="bg-white text-sm px-2 py-1 rounded-lg shadow">
+        {chat.date}
+      </div>
+    </div>
+  ) : (
     <div
       className={`flex ${
         chat.from === currentUserEmail ? "justify-end" : "justify-start"

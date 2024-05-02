@@ -16,13 +16,19 @@ const ChatWindow = ({ setFiles }) => {
   return (
     <div className="h-full">
       <div className="h-[90%] overflow-y-scroll px-10 py-5 flex flex-col gap-1 relative">
-        {user.selectedUser.chats.map((chat, i) => (
-          <Chat
-            chat={chat}
-            key={chat._id}
-            currentUserEmail={localStorageUser.email}
-          />
-        ))}
+        {user.other.chatWindowLoading ? (
+          <div className="flex justify-center">
+            <span className="loading loading-spinner text-poll-bar-fill-sender"></span>
+          </div>
+        ) : (
+          user.selectedUser.chats.map((chat, i) => (
+            <Chat
+              chat={chat}
+              key={chat._id}
+              currentUserEmail={localStorageUser.email}
+            />
+          ))
+        )}
         <div ref={bottomRef}></div>
       </div>
       <div className="h-[10%] flex bg-panel-header-background items-center px-2 gap-3">

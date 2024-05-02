@@ -6,8 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { middle } from "../../state/panel/panelSlice";
 import InputFileIcon from "../input/InputFileIcon";
 import moment from "moment";
-import { updateChats } from "../../state/user/userSlice";
-import { uploadFiles } from "../../service/chat";
+import { setCurrentUser, updateChats } from "../../state/user/userSlice";
+import { getContacts, uploadFiles } from "../../service/chat";
+import { getUser } from "../../service/user";
 const localStorageUser = JSON.parse(localStorage.getItem("user"));
 const FilePreview = ({ files, setFiles }) => {
   const dispatch = useDispatch();
@@ -192,6 +193,9 @@ const FilePreview = ({ files, setFiles }) => {
           <div className="bg-poll-bar-fill-sender p-5 rounded-full">
             <SendIcon
               onClick={async () => {
+                const result = await getUser({
+                  email: user.selectedUser.email,
+                });
                 dispatch(
                   updateChats(
                     files.map((file) => {
@@ -210,7 +214,10 @@ const FilePreview = ({ files, setFiles }) => {
                         createdAt: moment().format("DD/MM/YYYY").slice(0, 10),
                         type: fileType,
                         _id: String(Math.random() * 10000000),
-                        seen: false,
+                        seen:
+                          result.openProfile === localStorageUser.email
+                            ? true
+                            : false,
                         filename: file.name,
                       };
                     })
@@ -222,6 +229,15 @@ const FilePreview = ({ files, setFiles }) => {
                   from: localStorageUser.email,
                   to: user.selectedUser.email,
                 });
+                const resultContacts = await getContacts(
+                  localStorageUser.email
+                );
+                dispatch(
+                  setCurrentUser({
+                    ...user.currentUser,
+                    contacts: resultContacts,
+                  })
+                );
               }}
             />
           </div>

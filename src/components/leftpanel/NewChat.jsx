@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { left } from "../../state/panel/panelSlice";
 import { getAllUsers, getUser, setOpenProfile } from "../../service/user";
 import { setSelectedUser } from "../../state/user/userSlice";
-import { getChats } from "../../service/chat";
+import { downloadFile, getChats } from "../../service/chat";
 const localStorageUser = JSON.parse(localStorage.getItem("user")) || {};
 const NewChat = () => {
   const dispatch = useDispatch();
@@ -19,13 +19,25 @@ const NewChat = () => {
         from: localStorageUser.email,
         to: newChatUser.email,
       });
+      const newChat = [];
+      for (const chat of chats) {
+        if (chat.type !== "text" && chat.type !== "date") {
+          const result = await downloadFile(chat.message);
+          newChat.push({
+            ...chat,
+            message: result,
+          });
+        } else {
+          newChat.push(chat);
+        }
+      }
       dispatch(
         setSelectedUser({
           email: newChatUser.email,
           lastSeen: result.lastSeen,
           profileImageUrl: result.profileImageUrl,
           name: result.name,
-          chats,
+          chats: newChat,
         })
       );
       await setOpenProfile({

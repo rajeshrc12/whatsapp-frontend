@@ -3,9 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   resetUser,
   setCurrentUser,
+  setOther,
   setSelectedUser,
 } from "../../state/user/userSlice";
-import { getChats, getContacts, readChats } from "../../service/chat";
+import {
+  downloadFile,
+  getChats,
+  getContacts,
+  readChats,
+} from "../../service/chat";
 import { left } from "../../state/panel/panelSlice";
 import { useNavigate } from "react-router-dom";
 import NewChatIcon from "../../icons/NewChatIcon";
@@ -20,6 +26,7 @@ const ExistingChat = () => {
   const handleExistingChatContact = async (contact) => {
     console.log(contact);
     if (user.selectedUser.email !== contact.email) {
+      dispatch(setOther({ chatWindowLoading: true }));
       if (contact.unseenCount) {
         await readChats({
           from: localStorageUser.email,
@@ -29,17 +36,30 @@ const ExistingChat = () => {
         dispatch(setCurrentUser({ ...user.currentUser, contacts: result }));
       }
       const result = await getUser({ email: contact.email });
-      const chats = await getChats({
+      let chats = await getChats({
         from: localStorageUser.email,
         to: contact.email,
       });
+      const newChat = [];
+      for (const chat of chats) {
+        if (chat.type !== "text" && chat.type !== "date") {
+          const result = await downloadFile(chat.message);
+          newChat.push({
+            ...chat,
+            message: result,
+          });
+        } else {
+          newChat.push(chat);
+        }
+      }
+      dispatch(setOther({ chatWindowLoading: false }));
       dispatch(
         setSelectedUser({
           email: contact.email,
           lastSeen: result.lastSeen,
           profileImageUrl: result.profileImageUrl,
           name: result.name,
-          chats,
+          chats: newChat,
         })
       );
       await setOpenProfile({

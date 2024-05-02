@@ -68,3 +68,15 @@ export const uploadFiles = async ({ files, from, to }) => {
     console.log("error src/service/chat/(uploadFiles)", error);
   }
 };
+
+export const downloadFile = async (id) => {
+  try {
+    const response = await axios.get(`${serverUrl}/download/${id}`, {
+      responseType: "blob",
+    });
+    // console.log("src/service/chat/(downloadFile)", response.data);
+    return URL.createObjectURL(response.data);
+  } catch (error) {
+    console.log("error src/service/chat/(downloadFile)", error);
+  }
+};

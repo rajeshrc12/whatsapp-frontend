@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getUser } from "../../service/user";
-import { getChats } from "../../service/chat";
+import { downloadFile, getChats } from "../../service/chat";
 
 const initialState = {
   currentUser: {
@@ -16,6 +16,9 @@ const initialState = {
     lastSeen: "",
     profileImageUrl: "",
     chats: [],
+  },
+  other: {
+    chatWindowLoading: false,
   },
 };
 const userSlice = createSlice({
@@ -33,6 +36,9 @@ const userSlice = createSlice({
         ...state.selectedUser.chats,
         ...action.payload,
       ];
+    },
+    setOther: (state, action) => {
+      state.other = action.payload;
     },
     resetUser: () => initialState,
   },
@@ -68,14 +74,24 @@ export const fetchChats = createAsyncThunk(
     try {
       const state = thunkAPI.getState();
       let chats = state.user.selectedUser.chats;
-      console.log("from slice fetchChats", state.user, currentUserEmail);
       if (currentUserEmail && state.user.selectedUser.email) {
-        const result = await getChats({
+        const resultChats = await getChats({
           from: currentUserEmail,
           to: state.user.selectedUser.email,
         });
-        console.log(result);
-        chats = result;
+        const newChat = [];
+        for (const chat of resultChats) {
+          if (chat.type !== "text" && chat.type !== "date") {
+            const result = await downloadFile(chat.message);
+            newChat.push({
+              ...chat,
+              message: result,
+            });
+          } else {
+            newChat.push(chat);
+          }
+        }
+        chats = newChat;
       }
       return chats;
     } catch (error) {
@@ -83,6 +99,11 @@ export const fetchChats = createAsyncThunk(
     }
   }
 );
-export const { setCurrentUser, setSelectedUser, resetUser, updateChats } =
-  userSlice.actions;
+export const {
+  setCurrentUser,
+  setSelectedUser,
+  resetUser,
+  updateChats,
+  setOther,
+} = userSlice.actions;
 export default userSlice.reducer;
