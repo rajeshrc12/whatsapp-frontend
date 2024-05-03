@@ -15,9 +15,9 @@ import {
 import { left } from "../../state/panel/panelSlice";
 import { useNavigate } from "react-router-dom";
 import NewChatIcon from "../../icons/NewChatIcon";
-import MenuIcon from "../../icons/MenuIcon";
 import ExistingChatContact from "./ExistingChatContact";
 import { getUser, setOpenProfile } from "../../service/user";
+import { CiLogout } from "react-icons/ci";
 const localStorageUser = JSON.parse(localStorage.getItem("user")) || {};
 const ExistingChat = () => {
   const dispatch = useDispatch();
@@ -88,8 +88,11 @@ const ExistingChat = () => {
               />
             </div>
             <div>
-              <MenuIcon
+              <CiLogout
+                className="cursor-pointer"
+                size={25}
                 onClick={() => {
+                  localStorage.removeItem("user");
                   dispatch(resetUser());
                   navigate("/login");
                 }}
