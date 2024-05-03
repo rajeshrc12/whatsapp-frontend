@@ -57,7 +57,6 @@ const ChatWindow = ({ setFiles }) => {
                 toastMessageFileSize =
                   "file you tried adding is larger than the 3MB limit";
             }
-            console.log(toastMessageFileCount, toastMessageFileSize);
             if (toastMessageFileCount || toastMessageFileSize) {
               dispatch(
                 setToastNotification(

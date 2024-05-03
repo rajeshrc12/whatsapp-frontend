@@ -63,7 +63,6 @@ export const updateLastSeen = createAsyncThunk(
       const state = thunkAPI.getState();
       let lastSeen = state.user.selectedUser.lastSeen;
       if (state.user.selectedUser.email) {
-        console.log(state.user.selectedUser.email);
         const result = await getUser({ email: state.user.selectedUser.email });
         lastSeen = result.lastSeen;
       }

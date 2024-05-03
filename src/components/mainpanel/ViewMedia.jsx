@@ -27,7 +27,9 @@ const ViewMedia = () => {
           <div className="flex flex-col">
             <div>{user.selectedUser.name}</div>
             <div className="text-sm text-input-border">
-              {getTimeInAmPM(user.selectedUser.lastSeen)}
+              {user.selectedUser.lastSeen === "online"
+                ? user.selectedUser.lastSeen
+                : "last seen at " + getTimeInAmPM(user.selectedUser.lastSeen)}
             </div>
           </div>
         </div>

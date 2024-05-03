@@ -8,6 +8,7 @@ import { setSelectedUser } from "../../state/user/userSlice";
 import { downloadFile, getChats } from "../../service/chat";
 const NewChat = () => {
   const localStorageUser = JSON.parse(localStorage.getItem("user")) || {};
+  const [search, setSearch] = useState("");
   const dispatch = useDispatch();
   const [users, setUsers] = useState([]);
   const user = useSelector((state) => state.user);
@@ -69,6 +70,8 @@ const NewChat = () => {
         </div>
         <div className="w-full p-2">
           <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Search name or email"
             type="text"
             className="bg-panel-header-background w-full rounded-lg p-1 outline-none"
@@ -76,13 +79,19 @@ const NewChat = () => {
         </div>
       </div>
       <div className="h-[83%] overflow-y-scroll">
-        {users.map((user) => (
-          <NewChatContact
-            key={user._id}
-            user={user}
-            handleNewChatContact={handleNewChatContact}
-          />
-        ))}
+        {users
+          .filter(
+            (contact) =>
+              contact.name.toLowerCase().includes(search.toLowerCase()) ||
+              contact.email.toLowerCase().includes(search.toLowerCase())
+          )
+          .map((user) => (
+            <NewChatContact
+              key={user._id}
+              user={user}
+              handleNewChatContact={handleNewChatContact}
+            />
+          ))}
       </div>
     </div>
   );

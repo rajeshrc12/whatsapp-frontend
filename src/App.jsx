@@ -34,7 +34,6 @@ const App = () => {
   useEffect(() => {
     if (socket && localStorageUser?.email) {
       socket.on(localStorageUser?.email, (action) => {
-        console.log(action);
         if (action.type.includes("updateChats")) {
           dispatch(updateChats(action.payload));
         }

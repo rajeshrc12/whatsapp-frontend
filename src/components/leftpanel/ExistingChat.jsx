@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   resetUser,
@@ -19,12 +19,12 @@ import ExistingChatContact from "./ExistingChatContact";
 import { getUser, logoutUser, setOpenProfile } from "../../service/user";
 import { CiLogout } from "react-icons/ci";
 const ExistingChat = () => {
+  const [search, setSearch] = useState("");
   const localStorageUser = JSON.parse(localStorage.getItem("user")) || {};
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const handleExistingChatContact = async (contact) => {
-    console.log(contact);
     if (user.selectedUser.email !== contact.email) {
       dispatch(setOther({ ...user.other, chatWindowLoading: true }));
       if (contact.unseenCount) {
@@ -103,6 +103,8 @@ const ExistingChat = () => {
         </div>
         <div className="w-full p-2">
           <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Search"
             type="text"
             className="bg-panel-header-background w-full rounded-lg p-1 outline-none"
@@ -110,15 +112,21 @@ const ExistingChat = () => {
         </div>
       </div>
       <div className="h-[83%] overflow-y-scroll">
-        {user.currentUser.contacts.map((contact) => (
-          <ExistingChatContact
-            key={contact.email}
-            contact={contact}
-            selectedEmail={user.selectedUser.email}
-            currentEmail={localStorageUser.email}
-            handleExistingChatContact={handleExistingChatContact}
-          />
-        ))}
+        {user.currentUser.contacts
+          .filter(
+            (contact) =>
+              contact.name.toLowerCase().includes(search.toLowerCase()) ||
+              contact.email.toLowerCase().includes(search.toLowerCase())
+          )
+          .map((contact) => (
+            <ExistingChatContact
+              key={contact.email}
+              contact={contact}
+              selectedEmail={user.selectedUser.email}
+              currentEmail={localStorageUser.email}
+              handleExistingChatContact={handleExistingChatContact}
+            />
+          ))}
       </div>
     </div>
   );

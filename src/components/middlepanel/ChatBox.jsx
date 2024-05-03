@@ -12,7 +12,6 @@ const ChatBox = () => {
     if (e.key === "Enter" && message.trim()) {
       setMessage("");
       const result = await getUser({ email: user.selectedUser.email });
-      console.log(result);
       const chat = {
         from: localStorageUser.email,
         to: user.selectedUser.email,

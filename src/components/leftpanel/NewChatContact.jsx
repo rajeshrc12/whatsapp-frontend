@@ -18,7 +18,7 @@ const NewChatContact = ({ user, handleNewChatContact }) => {
       )}
       <div className="flex flex-col">
         <div>{user.name}</div>
-        <div className="text-xs text-input-border">{user.about}</div>
+        <div className="text-xs text-input-border">{user.email}</div>
       </div>
     </div>
   );
