@@ -5,6 +5,7 @@ import DownloadIcon from "../../icons/DownloadIcon";
 import { FaFile } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { setOther } from "../../state/user/userSlice";
+import { BiPlay } from "react-icons/bi";
 
 const Chat = ({ chat, currentUserEmail }) => {
   const dispatch = useDispatch();
@@ -61,19 +62,24 @@ const Chat = ({ chat, currentUserEmail }) => {
           </div>
         </div>
       );
-    else if (chat.type === "video")
+    else if (chat.type === "video") {
       return (
         <div
           onClick={() => {
             dispatch(setOther({ ...user.other, selectedMedia: chat }));
           }}
-          className={`cursor-pointer p-1 w-[10rem] rounded-lg shadow ${
+          className={`relative cursor-pointer p-1 max-w-[20rem] rounded-lg shadow ${
             chat.from === currentUserEmail
               ? "bg-outgoing-background"
               : "bg-white"
           }`}
         >
-          <video src={chat.message} alt="" />
+          <div className="absolute h-full w-full flex justify-center items-center">
+            <div className="bg-transparentXl rounded-full p-2">
+              <BiPlay color="white" size={30} />
+            </div>
+          </div>
+          <video src={chat.message} alt="" className="max-h-[22rem]" />
           <div className={`flex justify-end items-center w-full pt-1`}>
             <div className="text-[11px] text-input-border min-w-[50px]">
               {getTimeInAmPM(chat.createdAt)}
@@ -86,7 +92,7 @@ const Chat = ({ chat, currentUserEmail }) => {
           </div>
         </div>
       );
-    else
+    } else
       return (
         <div
           className={`p-1 w-[20rem] rounded-lg shadow ${

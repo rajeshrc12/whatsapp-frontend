@@ -77,7 +77,7 @@ const ViewMedia = () => {
                 (chat) => chat._id === user.other.selectedMedia._id
               )?.message
             }
-            className="h-full w-60"
+            className="h-full"
           />
         )}
         <div></div>
@@ -130,7 +130,7 @@ const ViewMedia = () => {
                     className={`${
                       chat._id === user.other.selectedMedia._id &&
                       "scale-75 border-[5px] border-gray-200"
-                    } rounded-lg flex justify-center h-[80px]`}
+                    } rounded-lg border border-gray-300 flex justify-center h-[80px]`}
                   >
                     <video src={chat.message} className="h-full" />
                   </div>
