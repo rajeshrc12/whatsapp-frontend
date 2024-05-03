@@ -26,6 +26,15 @@ const ExistingChat = () => {
   const user = useSelector((state) => state.user);
   const handleExistingChatContact = async (contact) => {
     if (user.selectedUser.email !== contact.email) {
+      dispatch(
+        setSelectedUser({
+          email: contact.email,
+          lastSeen: "",
+          profileImageUrl: contact.profileImageUrl,
+          name: contact.name,
+          chats: [],
+        })
+      );
       dispatch(setOther({ ...user.other, chatWindowLoading: true }));
       if (contact.unseenCount) {
         await readChats({

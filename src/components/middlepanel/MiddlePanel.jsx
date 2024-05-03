@@ -29,6 +29,8 @@ const MiddlePanel = () => {
             <div className="text-sm text-input-border">
               {user.selectedUser.lastSeen === "online"
                 ? user.selectedUser.lastSeen
+                : user.selectedUser.lastSeen === ""
+                ? ""
                 : "last seen at " + getTimeInAmPM(user.selectedUser.lastSeen)}
             </div>
           </div>
