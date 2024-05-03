@@ -5,6 +5,7 @@ import EmptyProfileIcon from "../../icons/EmptyProfileIcon";
 import CancelIcon from "../../icons/CancelIcon";
 import { setOther } from "../../state/user/userSlice";
 import { getTimeInAmPM } from "../../utils/common";
+import { BiPlay } from "react-icons/bi";
 
 const ViewMedia = () => {
   const user = useSelector((state) => state.user);
@@ -127,11 +128,16 @@ const ViewMedia = () => {
                       flexGrow: "0",
                       flexShrink: "0",
                     }}
-                    className={`${
+                    className={`relative ${
                       chat._id === user.other.selectedMedia._id &&
                       "scale-75 border-[5px] border-gray-200"
                     } rounded-lg border border-gray-300 flex justify-center h-[80px]`}
                   >
+                    <div className="absolute h-full w-full flex justify-center items-center">
+                      <div className="bg-transparentXl rounded-full p-1">
+                        <BiPlay color="white" size={20} />
+                      </div>
+                    </div>
                     <video src={chat.message} className="h-full" />
                   </div>
                 );
