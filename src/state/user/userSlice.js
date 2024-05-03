@@ -19,6 +19,7 @@ const initialState = {
   },
   other: {
     chatWindowLoading: false,
+    selectedMedia: null,
   },
 };
 const userSlice = createSlice({

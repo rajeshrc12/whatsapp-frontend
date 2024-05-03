@@ -13,6 +13,7 @@ import SideBar from "./components/sidebar/SideBar";
 import LeftPanel from "./components/leftpanel/LeftPanel";
 import MiddlePanel from "./components/middlepanel/MiddlePanel";
 import { getContacts } from "./service/chat";
+import ViewMedia from "./components/mainpanel/ViewMedia";
 const App = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -92,6 +93,7 @@ const App = () => {
           </div>
         )}
       </div>
+      {user.other.selectedMedia && <ViewMedia />}
     </div>
   );
 };

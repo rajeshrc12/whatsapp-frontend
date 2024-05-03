@@ -26,7 +26,7 @@ const ExistingChat = () => {
   const handleExistingChatContact = async (contact) => {
     console.log(contact);
     if (user.selectedUser.email !== contact.email) {
-      dispatch(setOther({ chatWindowLoading: true }));
+      dispatch(setOther({ ...user.other, chatWindowLoading: true }));
       if (contact.unseenCount) {
         await readChats({
           from: localStorageUser.email,
@@ -52,7 +52,7 @@ const ExistingChat = () => {
           newChat.push(chat);
         }
       }
-      dispatch(setOther({ chatWindowLoading: false }));
+      dispatch(setOther({ ...user.other, chatWindowLoading: false }));
       dispatch(
         setSelectedUser({
           email: contact.email,
