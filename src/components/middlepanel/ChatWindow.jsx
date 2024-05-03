@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { middle } from "../../state/panel/panelSlice";
 import InputFileIcon from "../input/InputFileIcon";
 import { setToastNotification } from "../../state/user/userSlice";
-const localStorageUser = JSON.parse(localStorage.getItem("user"));
 const ChatWindow = ({ setFiles }) => {
+  const localStorageUser = JSON.parse(localStorage.getItem("user"));
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const bottomRef = useRef();

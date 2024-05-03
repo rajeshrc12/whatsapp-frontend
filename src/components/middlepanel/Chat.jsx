@@ -135,7 +135,7 @@ const Chat = ({ chat, currentUserEmail }) => {
       );
   };
   return chat.type === "date" ? (
-    <div className="flex justify-center sticky top-0">
+    <div className="flex justify-center sticky top-0 z-10">
       <div className="bg-white text-sm px-2 py-1 rounded-lg shadow">
         {chat.date}
       </div>

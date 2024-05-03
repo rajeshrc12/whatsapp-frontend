@@ -6,8 +6,8 @@ import { left } from "../../state/panel/panelSlice";
 import { getAllUsers, getUser, setOpenProfile } from "../../service/user";
 import { setSelectedUser } from "../../state/user/userSlice";
 import { downloadFile, getChats } from "../../service/chat";
-const localStorageUser = JSON.parse(localStorage.getItem("user")) || {};
 const NewChat = () => {
+  const localStorageUser = JSON.parse(localStorage.getItem("user")) || {};
   const dispatch = useDispatch();
   const [users, setUsers] = useState([]);
   const user = useSelector((state) => state.user);

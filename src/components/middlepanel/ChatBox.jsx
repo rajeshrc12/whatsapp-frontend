@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getContacts, sendChats } from "../../service/chat";
 import { setCurrentUser, updateChats } from "../../state/user/userSlice";
 import { getUser } from "../../service/user";
-const localStorageUser = JSON.parse(localStorage.getItem("user"));
 const ChatBox = () => {
+  const localStorageUser = JSON.parse(localStorage.getItem("user"));
   const [message, setMessage] = useState("");
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();

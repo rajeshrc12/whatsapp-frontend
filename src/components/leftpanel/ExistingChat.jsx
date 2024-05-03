@@ -16,10 +16,10 @@ import { left } from "../../state/panel/panelSlice";
 import { useNavigate } from "react-router-dom";
 import NewChatIcon from "../../icons/NewChatIcon";
 import ExistingChatContact from "./ExistingChatContact";
-import { getUser, setOpenProfile } from "../../service/user";
+import { getUser, logoutUser, setOpenProfile } from "../../service/user";
 import { CiLogout } from "react-icons/ci";
-const localStorageUser = JSON.parse(localStorage.getItem("user")) || {};
 const ExistingChat = () => {
+  const localStorageUser = JSON.parse(localStorage.getItem("user")) || {};
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
@@ -91,7 +91,8 @@ const ExistingChat = () => {
               <CiLogout
                 className="cursor-pointer"
                 size={25}
-                onClick={() => {
+                onClick={async () => {
+                  await logoutUser({ email: localStorageUser.email });
                   localStorage.removeItem("user");
                   dispatch(resetUser());
                   navigate("/login");

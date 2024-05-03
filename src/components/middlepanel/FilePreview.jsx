@@ -13,8 +13,8 @@ import {
 } from "../../state/user/userSlice";
 import { getContacts, uploadFiles } from "../../service/chat";
 import { getUser } from "../../service/user";
-const localStorageUser = JSON.parse(localStorage.getItem("user"));
 const FilePreview = ({ files, setFiles }) => {
+  const localStorageUser = JSON.parse(localStorage.getItem("user"));
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [selectedPreviewFile, setSelectedPreviewFile] = useState(0);
