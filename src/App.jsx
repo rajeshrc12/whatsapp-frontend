@@ -14,6 +14,7 @@ import LeftPanel from "./components/leftpanel/LeftPanel";
 import MiddlePanel from "./components/middlepanel/MiddlePanel";
 import { getContacts } from "./service/chat";
 import ViewMedia from "./components/mainpanel/ViewMedia";
+import ToastNotification from "./components/toastnotification/ToastNotification";
 const App = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -34,20 +35,17 @@ const App = () => {
   useEffect(() => {
     if (socket) {
       const localStorageUser = JSON.parse(localStorage.getItem("user"));
-      socket.on(localStorageUser?.email, (data) => {
-        console.log(data);
-        if (data.type === "updateChats") {
-          dispatch(updateChats(data.chat));
+      socket.on(localStorageUser?.email, (action) => {
+        console.log(action);
+        if (action.type.includes("updateChats")) {
+          dispatch(updateChats(action.payload));
         }
-        if (
-          data.type === "fetchContacts" ||
-          data.type === "fetchContactsAndChats"
-        ) {
+        if (action.type.includes("fetchContacts")) {
           getContacts(localStorageUser.email).then((res) =>
             dispatch(setCurrentUser({ ...user.currentUser, contacts: res }))
           );
         }
-        if (data.type === "fetchContactsAndChats") {
+        if (action.type.includes("fetchChats")) {
           dispatch(fetchChats(localStorageUser?.email));
         }
       });
@@ -93,7 +91,8 @@ const App = () => {
           </div>
         )}
       </div>
-      {user.other.selectedMedia && <ViewMedia />}
+      <ViewMedia />
+      <ToastNotification />
     </div>
   );
 };

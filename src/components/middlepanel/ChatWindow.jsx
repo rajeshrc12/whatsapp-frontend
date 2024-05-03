@@ -5,6 +5,7 @@ import ChatBox from "./ChatBox";
 import { useDispatch, useSelector } from "react-redux";
 import { middle } from "../../state/panel/panelSlice";
 import InputFileIcon from "../input/InputFileIcon";
+import { setToastNotification } from "../../state/user/userSlice";
 const localStorageUser = JSON.parse(localStorage.getItem("user"));
 const ChatWindow = ({ setFiles }) => {
   const user = useSelector((state) => state.user);
@@ -37,15 +38,40 @@ const ChatWindow = ({ setFiles }) => {
           callback={(e) => {
             let allFiles = [];
             let fileCount = 0;
+            let toastMessageFileCount = "";
+            let toastMessageFileSize = "";
             for (const file of [...e.target.files]) {
-              if (fileCount > 11) break;
+              if (fileCount > 11) {
+                if (!toastMessageFileCount)
+                  toastMessageFileCount = "only 12 files are allowed";
+                break;
+              }
               if (Math.round(file.size / 1024 / 1024) <= 3) {
                 allFiles.push(file);
                 fileCount++;
               }
+              if (
+                Math.round(file.size / 1024 / 1024) > 3 &&
+                !toastMessageFileSize
+              )
+                toastMessageFileSize =
+                  "file you tried adding is larger than the 3MB limit";
             }
-            setFiles(allFiles);
-            dispatch(middle("filePreview"));
+            console.log(toastMessageFileCount, toastMessageFileSize);
+            if (toastMessageFileCount || toastMessageFileSize) {
+              dispatch(
+                setToastNotification(
+                  toastMessageFileCount + toastMessageFileSize
+                )
+              );
+              setTimeout(() => {
+                dispatch(setToastNotification(null));
+              }, 5000);
+            }
+            if (allFiles.length) {
+              setFiles(allFiles);
+              dispatch(middle("filePreview"));
+            }
           }}
         />
         <ChatBox />

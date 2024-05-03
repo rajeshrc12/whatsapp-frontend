@@ -6,7 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { middle } from "../../state/panel/panelSlice";
 import InputFileIcon from "../input/InputFileIcon";
 import moment from "moment";
-import { setCurrentUser, updateChats } from "../../state/user/userSlice";
+import {
+  setCurrentUser,
+  setToastNotification,
+  updateChats,
+} from "../../state/user/userSlice";
 import { getContacts, uploadFiles } from "../../service/chat";
 import { getUser } from "../../service/user";
 const localStorageUser = JSON.parse(localStorage.getItem("user"));
@@ -173,17 +177,41 @@ const FilePreview = ({ files, setFiles }) => {
             <InputFileIcon
               icon={<FaPlus color="#79909b" size={20} />}
               callback={(e) => {
-                if (files.length < 12) {
-                  let allFiles = [];
-                  let fileCount = 0;
-                  for (const file of [...files, ...e.target.files]) {
-                    if (fileCount > 11) break;
-                    if (Math.round(file.size / 1024 / 1024) <= 3) {
-                      allFiles.push(file);
-                      fileCount++;
-                    }
+                let allFiles = [];
+                let fileCount = 0;
+                let toastMessageFileCount = "";
+                let toastMessageFileSize = "";
+                for (const file of [...files, ...e.target.files]) {
+                  if (fileCount > 11) {
+                    if (!toastMessageFileCount)
+                      toastMessageFileCount = "only 12 files are allowed";
+                    break;
                   }
+                  if (Math.round(file.size / 1024 / 1024) <= 3) {
+                    allFiles.push(file);
+                    fileCount++;
+                  }
+                  if (
+                    Math.round(file.size / 1024 / 1024) > 3 &&
+                    !toastMessageFileSize
+                  )
+                    toastMessageFileSize =
+                      "file you tried adding is larger than the 3MB limit";
+                }
+                console.log(toastMessageFileCount, toastMessageFileSize);
+                if (toastMessageFileCount || toastMessageFileSize) {
+                  dispatch(
+                    setToastNotification(
+                      toastMessageFileCount + toastMessageFileSize
+                    )
+                  );
+                  setTimeout(() => {
+                    dispatch(setToastNotification(null));
+                  }, 5000);
+                }
+                if (allFiles.length) {
                   setFiles(allFiles);
+                  dispatch(middle("filePreview"));
                 }
               }}
             />
@@ -211,7 +239,7 @@ const FilePreview = ({ files, setFiles }) => {
                         message: URL.createObjectURL(file),
                         from: localStorageUser.email,
                         to: user.selectedUser.email,
-                        createdAt: moment().format("DD/MM/YYYY").slice(0, 10),
+                        createdAt: String(new Date()),
                         type: fileType,
                         _id: String(Math.random() * 10000000),
                         seen:

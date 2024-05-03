@@ -1,6 +1,3 @@
-Fetch all media
-while storing media check user status
-send live media using socket
-view media
+when you remove media, it wont going to previuos media
+show message when you select large media size and more than 12 items
 logout
-edit own profile

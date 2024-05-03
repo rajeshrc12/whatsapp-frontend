@@ -9,7 +9,7 @@ import { getTimeInAmPM } from "../../utils/common";
 const ViewMedia = () => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  return (
+  return user.other.selectedMedia ? (
     <div className="fixed top-0 left-0 h-screen w-screen bg-white">
       <div className="h-[10%] flex justify-between">
         <div className="flex gap-3 items-center p-3">
@@ -137,6 +137,8 @@ const ViewMedia = () => {
         </div>
       </div>
     </div>
+  ) : (
+    <></>
   );
 };
 

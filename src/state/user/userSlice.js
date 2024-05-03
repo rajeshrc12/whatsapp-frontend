@@ -20,6 +20,7 @@ const initialState = {
   other: {
     chatWindowLoading: false,
     selectedMedia: null,
+    toastNotification: null,
   },
 };
 const userSlice = createSlice({
@@ -40,6 +41,9 @@ const userSlice = createSlice({
     },
     setOther: (state, action) => {
       state.other = action.payload;
+    },
+    setToastNotification: (state, action) => {
+      state.other.toastNotification = action.payload;
     },
     resetUser: () => initialState,
   },
@@ -106,5 +110,6 @@ export const {
   resetUser,
   updateChats,
   setOther,
+  setToastNotification,
 } = userSlice.actions;
 export default userSlice.reducer;
