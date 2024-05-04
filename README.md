@@ -1,6 +1,6 @@
 # WhatsApp Frontend
 
-## Project is divied into two parts
+## Project is divided into two parts
    1. **Frontend** - current repo
    2. **Backend** - https://github.com/rajeshrc12/whatsapp-backend
 
