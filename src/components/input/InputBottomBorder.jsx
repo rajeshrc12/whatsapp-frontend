@@ -25,9 +25,11 @@ const InputBottomBorder = ({ text, cb = () => {} }) => {
       <div className={`${edit && "border-b-2 border-b-gray-500 pb-1"}`}>
         {edit ? (
           <CheckmarkIcon
+            color="#000000"
             onClick={() => {
               setEdit(false);
-              cb();
+              if (value.trim() && value !== text) cb(value);
+              else setValue(text);
             }}
           />
         ) : (

@@ -15,6 +15,7 @@ import MiddlePanel from "./components/middlepanel/MiddlePanel";
 import { getContacts } from "./service/chat";
 import ViewMedia from "./components/mainpanel/ViewMedia";
 import ToastNotification from "./components/toastnotification/ToastNotification";
+import ViewProfileImage from "./components/profile/ViewProfileImage";
 const App = () => {
   const localStorageUser = JSON.parse(localStorage.getItem("user"));
   const dispatch = useDispatch();
@@ -91,6 +92,7 @@ const App = () => {
         </div>
         <ViewMedia />
         <ToastNotification />
+        <ViewProfileImage />
       </div>
     );
   else return <Navigate to={"/login"} />;

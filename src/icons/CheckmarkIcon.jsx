@@ -1,7 +1,7 @@
 import React from "react";
 import iconColors from "./colors";
 
-const CheckmarkIcon = ({ onClick = () => {} }) => {
+const CheckmarkIcon = ({ onClick = () => {}, color = "#ffffff" }) => {
   return (
     <svg
       onClick={onClick}
@@ -17,7 +17,7 @@ const CheckmarkIcon = ({ onClick = () => {} }) => {
     >
       <title>checkmark</title>
       <path
-        fill={iconColors.panelHeaderIcon}
+        fill={color}
         d="M9,17.2l-4-4l-1.4,1.3L9,19.9L20.4,8.5L19,7.1L9,17.2z"
       ></path>
     </svg>

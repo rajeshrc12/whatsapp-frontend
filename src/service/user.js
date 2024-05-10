@@ -56,3 +56,49 @@ export const logoutUser = async ({ email }) => {
     console.log("error src/service/user/(logoutUser)", error);
   }
 };
+
+export const updateUser = async ({ email, key, value }) => {
+  try {
+    const response = await axios.patch(`${serverUrl}/user`, {
+      email,
+      key,
+      value,
+    });
+    // console.log("src/service/user/(updateuser)", response.data);
+    return response.data;
+  } catch (error) {
+    console.log("error src/service/user/(updateuser)", error);
+  }
+};
+
+export const updateUserPhoto = async ({ email, photo }) => {
+  try {
+    const formData = new FormData();
+    formData.append("photo", photo);
+    formData.append(
+      "userData",
+      JSON.stringify({
+        email,
+      })
+    );
+    const response = await axios.post(`${serverUrl}/userphoto`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    // console.log("src/service/user/(updateuser)", response.data);
+    return response.data;
+  } catch (error) {
+    console.log("error src/service/user/(updateuser)", error);
+  }
+};
+
+export const deleteUserPhoto = async ({ email }) => {
+  try {
+    const response = await axios.delete(`${serverUrl}/userphoto/${email}`);
+    // console.log("src/service/user/(updateuser)", response.data);
+    return response.data;
+  } catch (error) {
+    console.log("error src/service/user/(updateuser)", error);
+  }
+};

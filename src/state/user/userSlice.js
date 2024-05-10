@@ -21,6 +21,7 @@ const initialState = {
     chatWindowLoading: false,
     selectedMedia: null,
     toastNotification: null,
+    showCurrentUserProfileImage: false,
   },
 };
 const userSlice = createSlice({

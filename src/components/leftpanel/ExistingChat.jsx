@@ -24,6 +24,7 @@ const ExistingChat = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  const [contacts, setContacts] = useState([]);
   const handleExistingChatContact = async (contact) => {
     if (user.selectedUser.email !== contact.email) {
       dispatch(
@@ -79,9 +80,7 @@ const ExistingChat = () => {
   };
   useEffect(() => {
     if (localStorageUser?.email)
-      getContacts(localStorageUser.email).then((res) =>
-        dispatch(setCurrentUser({ ...user.currentUser, contacts: res }))
-      );
+      getContacts(localStorageUser.email).then((res) => setContacts(res));
   }, []);
   return (
     <div className="h-full">
@@ -121,7 +120,7 @@ const ExistingChat = () => {
         </div>
       </div>
       <div className="h-[83%] overflow-y-scroll">
-        {user.currentUser.contacts
+        {contacts
           .filter(
             (contact) =>
               contact.name.toLowerCase().includes(search.toLowerCase()) ||
