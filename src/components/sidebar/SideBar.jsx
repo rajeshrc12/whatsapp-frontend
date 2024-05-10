@@ -42,13 +42,13 @@ const SideBar = () => {
         >
           <ChatIcon />
         </div>
-        <div
+        {/* <div
           className={`p-2 rounded-full cursor-pointer ${
             panel.left === "statusList" && "bg-transparentLg"
           }`}
         >
           <StatusIcon onClick={() => dispatch(left("statusList"))} />
-        </div>
+        </div> */}
       </div>
       <div
         className={`p-2 rounded-full cursor-pointer ${
