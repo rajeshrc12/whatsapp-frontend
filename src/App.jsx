@@ -66,7 +66,7 @@ const App = () => {
           ) : (
             <div className="bg-panel-header-background h-full flex justify-center items-center">
               <div className="text-center">
-                <div className="text-2xl">WhatsApp web</div>
+                <div className="text-2xl">WhatsApp Web</div>
                 <img
                   src="https://static.whatsapp.net/rsrc.php/v3/yX/r/dJq9qKG5lDb.png"
                   width="320"
