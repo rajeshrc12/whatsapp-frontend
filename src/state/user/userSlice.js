@@ -31,6 +31,9 @@ const userSlice = createSlice({
     setCurrentUser: (state, action) => {
       state.currentUser = action.payload;
     },
+    setCurrentUserContacts: (state, action) => {
+      state.currentUser.contacts = action.payload;
+    },
     setSelectedUser: (state, action) => {
       state.selectedUser = action.payload;
     },
@@ -111,5 +114,6 @@ export const {
   updateChats,
   setOther,
   setToastNotification,
+  setCurrentUserContacts,
 } = userSlice.actions;
 export default userSlice.reducer;

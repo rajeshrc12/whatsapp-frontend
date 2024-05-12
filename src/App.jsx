@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchChats,
   setCurrentUser,
+  setCurrentUserContacts,
   updateChats,
   updateLastSeen,
 } from "./state/user/userSlice";
@@ -39,9 +40,9 @@ const App = () => {
           dispatch(updateChats(action.payload));
         }
         if (action.type.includes("fetchContacts")) {
-          getContacts(localStorageUser.email).then((res) =>
-            dispatch(setCurrentUser({ ...user.currentUser, contacts: res }))
-          );
+          getContacts(localStorageUser.email).then((res) => {
+            dispatch(setCurrentUserContacts(res));
+          });
         }
         if (action.type.includes("fetchChats")) {
           dispatch(fetchChats(localStorageUser?.email));

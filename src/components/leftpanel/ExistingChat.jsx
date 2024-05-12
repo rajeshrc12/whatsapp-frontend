@@ -86,6 +86,9 @@ const ExistingChat = () => {
         setContactsLoading(false);
       });
   }, []);
+  useEffect(() => {
+    setContacts(user.currentUser.contacts);
+  }, [user.currentUser.contacts]);
   return (
     <div className="h-full">
       <div className="h-[17%] border-b-[1px] flex flex-col justify-between">
