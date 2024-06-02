@@ -1,5 +1,18 @@
 # WhatsApp Frontend
 
+## Features
+- 🔐 Implemented Google Authentication for secure user login.
+- 💬 Developed messaging and media sharing functionalities.
+- 📁 Designed multiple file selection and preview options.
+- ⚠️ Implemented warnings for file quantity and size limits.
+- 📂 Integrated media preview and download functionalities.
+- 🟢 Created status indicators for online/offline users with last seen timestamps.
+- 🔔 Added features to display unseen message counts and mark messages as read upon contact selection.
+
+## Demo
+
+https://github.com/rajeshrc12/whatsapp-frontend/assets/91599153/369c663c-de08-4308-a799-ddd1d149526e
+
 ## Project is divided into two parts
    1. **Frontend** - current repo
    2. **Backend** - https://github.com/rajeshrc12/whatsapp-backend
