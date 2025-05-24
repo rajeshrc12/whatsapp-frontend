@@ -1,7 +1,5 @@
 # WhatsApp Frontend
 
----
-
 ## 🛠️ Technologies Used
 
 **Framework & Build Tools**
@@ -29,8 +27,7 @@
 - React Scroll
 - Moment.js
 - Moment Timezone
-
----
+-
 
 ## Features
 
