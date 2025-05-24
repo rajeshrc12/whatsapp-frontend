@@ -1,6 +1,39 @@
 # WhatsApp Frontend
 
+---
+
+## 🛠️ Technologies Used
+
+**Framework & Build Tools**
+
+- React
+- Vite
+- Tailwind CSS
+- daisyUI
+
+**State Management & Auth**
+
+- Redux Toolkit
+- Redux Persist
+- @react-oauth/google
+
+**Networking & Realtime**
+
+- Axios
+- Socket.io Client
+
+**Routing & UI Utilities**
+
+- React Router DOM
+- React Icons
+- React Scroll
+- Moment.js
+- Moment Timezone
+
+---
+
 ## Features
+
 - 🔐 Implemented Google Authentication for secure user login.
 - 💬 Developed messaging and media sharing functionalities.
 - 📁 Designed multiple file selection and preview options.
@@ -14,8 +47,9 @@
 https://github.com/rajeshrc12/whatsapp-frontend/assets/91599153/369c663c-de08-4308-a799-ddd1d149526e
 
 ## Project is divided into two parts
-   1. **Frontend** - current repo
-   2. **Backend** - https://github.com/rajeshrc12/whatsapp-backend
+
+1.  **Frontend** - current repo
+2.  **Backend** - https://github.com/rajeshrc12/whatsapp-backend
 
 If you encounter any issues during installation, feel free to reach out to me on LinkedIn: https://www.linkedin.com/in/rajeshcharhajari/
 
